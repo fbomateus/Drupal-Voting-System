@@ -1,0 +1,17 @@
+name: drupal-voting-system
+recipe: drupal10
+config:
+  php: "8.2"
+  webroot: web
+  xdebug: true
+  config:
+    php: lando/config/php.ini
+
+services:
+  appserver:
+    xdebug: true
+    config:
+      php: lando/config/php.ini
+    overrides:
+      environment:
+        PHP_IDE_CONFIG: "serverName=appserver"
