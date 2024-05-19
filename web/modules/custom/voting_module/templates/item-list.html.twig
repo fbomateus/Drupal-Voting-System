@@ -1,0 +1,32 @@
+{#
+/**
+ * @file
+ * Theme override to display a list of items.
+ *
+ * Available variables:
+ * - items: A list of items. Each item can be a string or a render array.
+ * - title: The title of the list.
+ * - attributes: HTML attributes for the containing element.
+ *
+ * @see template_preprocess_item_list()
+ */
+#}
+
+{% if items %}
+  <div{{ attributes.addClass('item-list') }}>
+    {% if title %}
+      <h2>{{ title }}</h2>
+    {% endif %}
+    <ul>
+      {% for item in items %}
+        <li>
+          {% if item.url %}
+            <a href="{{ item.url }}">{{ item.text }}</a>
+          {% else %}
+            {{ item }}
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endif %}

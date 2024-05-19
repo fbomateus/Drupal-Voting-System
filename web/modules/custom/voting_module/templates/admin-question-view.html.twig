@@ -1,0 +1,31 @@
+{#
+/**
+ * @file
+ * Theme implementation for the detailed view of a question and its answers.
+ *
+ * Available variables:
+ * - question: The question entity.
+ * - answers: An array of answer option entities.
+ *
+ * @see template_preprocess_admin_question_view()
+ */
+#}
+
+<div class="admin-question-view">
+  <h2>{{ 'Question'|t }}: {{ question.label }}</h2>
+  <p><strong>{{ 'Identifier'|t }}:</strong> {{ question.identifier }}</p>
+  <p><strong>{{ 'Type'|t }}:</strong> {{ question.type }}</p>
+
+  <h3>{{ 'Answers'|t }}</h3>
+  <ul>
+    {% for answer in answers %}
+      <li>
+        <strong>{{ answer.label }}</strong><br>
+        {{ answer.description.value|raw }}<br>
+        {% if answer.image.entity %}
+          <img src="{{ file_url(answer.image.entity.uri.value) }}" alt="{{ answer.label }}">
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+</div>

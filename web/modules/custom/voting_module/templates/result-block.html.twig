@@ -1,0 +1,46 @@
+{#
+/**
+ * @file
+ * Theme implementation for the Voting Results Block.
+ *
+ * Available variables:
+ * - question: The label of the question.
+ * - results: An array of results, keyed by answer option ID, each containing:
+ *   - count: The number of votes for this option.
+ * - percentages: An array of percentages, keyed by answer option ID.
+ * - average_ratings: An array of average ratings, keyed by answer option ID.
+ *
+ * @see template_preprocess_voting_results()
+ */
+#}
+
+<div class="voting-results-block">
+  <h2>{{ 'Voting Results for'|t }}: {{ question }}</h2>
+
+  {% if results is not empty %}
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>{{ 'Answer Option'|t }}</th>
+          <th>{{ 'Votes'|t }}</th>
+          <th>{{ 'Percentage'|t }}</th>
+          <th>{{ 'Average Rating'|t }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for answer_id, data in results %}
+          <tr>
+            <td>{{ data.label }}</td>
+            <td>{{ data.count }}</td>
+            <td>{{ percentages[answer_id]|number_format(2) }}%</td>
+            <td>{{ average_ratings[answer_id]|number_format(2) }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>{{ 'No results available for this question.'|t }}</p>
+  {% endif %}
+</div>
+
+{% set library = ['voting_module/result_block'] %}
