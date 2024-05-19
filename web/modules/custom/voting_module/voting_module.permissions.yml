@@ -1,0 +1,92 @@
+# Define permissions for the voting module.
+# This file defines the permissions that can be assigned to user roles in the system.
+
+# Permissions for the Question entity.
+'administer question entities':
+  title: 'Administer Question entities'
+  description: 'Allow users to administer Question entities.'
+  restrict access: TRUE
+
+'add question entities':
+  title: 'Add new Question entities'
+  description: 'Allow users to create new Question entities.'
+  restrict access: TRUE
+
+'edit question entities':
+  title: 'Edit Question entities'
+  description: 'Allow users to edit existing Question entities.'
+  restrict access: TRUE
+
+'delete question entities':
+  title: 'Delete Question entities'
+  description: 'Allow users to delete existing Question entities.'
+  restrict access: TRUE
+
+'view question entities':
+  title: 'View Question entities'
+  description: 'Allow users to view Question entities.'
+  restrict access: FALSE
+
+# Permissions for the AnswerOption entity.
+'administer answer option entities':
+  title: 'Administer Answer Option entities'
+  description: 'Allow users to administer Answer Option entities.'
+  restrict access: TRUE
+
+'add answer option entities':
+  title: 'Add new Answer Option entities'
+  description: 'Allow users to create new Answer Option entities.'
+  restrict access: TRUE
+
+'edit answer option entities':
+  title: 'Edit Answer Option entities'
+  description: 'Allow users to edit existing Answer Option entities.'
+  restrict access: TRUE
+
+'delete answer option entities':
+  title: 'Delete Answer Option entities'
+  description: 'Allow users to delete existing Answer Option entities.'
+  restrict access: TRUE
+
+'view answer option entities':
+  title: 'View Answer Option entities'
+  description: 'Allow users to view Answer Option entities.'
+  restrict access: FALSE
+
+# Permissions for the Assessment entity.
+'administer assessment entities':
+  title: 'Administer Assessment entities'
+  description: 'Allow users to administer Assessment entities.'
+  restrict access: TRUE
+
+'view assessment entities':
+  title: 'View Assessment entities'
+  description: 'Allow users to view Assessment entities.'
+  restrict access: FALSE
+
+# Permissions for the Result entity.
+'administer result entities':
+  title: 'Administer Result entities'
+  description: 'Allow users to administer Result entities.'
+  restrict access: TRUE
+
+'view result entities':
+  title: 'View Result entities'
+  description: 'Allow users to view Result entities.'
+  restrict access: FALSE
+
+# General permissions for the voting module.
+'administer voting module':
+  title: 'Administer Voting Module'
+  description: 'Allow users to administer the Voting Module settings and configurations.'
+  restrict access: TRUE
+
+'vote on questions':
+  title: 'Vote on Questions'
+  description: 'Allow users to vote on questions in the Voting Module.'
+  restrict access: FALSE
+
+'view voting results':
+  title: 'View Voting Results'
+  description: 'Allow users to view the results of votes in the Voting Module.'
+  restrict access: FALSE
