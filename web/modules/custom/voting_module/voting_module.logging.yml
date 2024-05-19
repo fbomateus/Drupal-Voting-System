@@ -1,0 +1,5 @@
+# Define logging channels for the voting module.
+
+channels:
+  voting:
+    label: 'Voting'
