@@ -1,0 +1,190 @@
+<?php
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function voting_module_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.voting_module':
+      return '<p>' . t('The Voting Module allows users to vote on questions and view results.') . '</p>';
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function voting_module_theme() {
+  return [
+    'voting_block' => [
+      'variables' => [
+        'questions' => [],
+      ],
+    ],
+    'result_block' => [
+      'variables' => [
+        'question' => NULL,
+        'results' => [],
+        'percentages' => [],
+        'average_ratings' => [],
+      ],
+    ],
+    'admin_question_view' => [
+      'variables' => [
+        'question' => NULL,
+        'answers' => [],
+      ],
+    ],
+  ];
+}
+
+/**
+ * Implements hook_permission().
+ */
+function voting_module_permission() {
+  return [
+    'administer voting module' => [
+      'title' => t('Administer Voting Module'),
+      'description' => t('Manage settings and content for the Voting Module.'),
+      'restrict access' => TRUE,
+    ],
+    'vote on questions' => [
+      'title' => t('Vote on questions'),
+      'description' => t('Allow users to vote on questions.'),
+      'restrict access' => FALSE,
+    ],
+    'view voting results' => [
+      'title' => t('View voting results'),
+      'description' => t('Allow users to view voting results.'),
+      'restrict access' => FALSE,
+    ],
+  ];
+}
+
+/**
+ * Implements hook_entity_type_build().
+ */
+function voting_module_entity_type_build(array &$entity_types) {
+  // Modify entity type definitions if necessary.
+  // For example, add new bundles or alter existing ones.
+}
+
+/**
+ * Implements hook_block_info().
+ */
+function voting_module_block_info() {
+  $blocks = [];
+  $blocks['voting_block'] = [
+    'info' => t('Voting Block'),
+    'description' => t('Provides a block for voting on questions.'),
+  ];
+  $blocks['result_block'] = [
+    'info' => t('Result Block'),
+    'description' => t('Provides a block for viewing voting results.'),
+  ];
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function voting_module_block_view($delta = '') {
+  $block = [];
+  switch ($delta) {
+    case 'voting_block':
+      $block['subject'] = t('Vote');
+      $block['content'] = [
+        '#theme' => 'voting_block',
+        '#questions' => _voting_module_get_questions(),
+      ];
+      break;
+
+    case 'result_block':
+      $block['subject'] = t('Results');
+      $block['content'] = [
+        '#theme' => 'result_block',
+        '#results' => _voting_module_get_results(),
+      ];
+      break;
+  }
+  return $block;
+}
+
+/**
+ * Helper function to get questions for the voting block.
+ */
+function _voting_module_get_questions() {
+  // Load questions from the database.
+  $questions = \Drupal::entityTypeManager()->getStorage('voting_module_question')->loadMultiple();
+  $options = [];
+  foreach ($questions as $question) {
+    $options[$question->id()] = $question->label();
+  }
+  return $options;
+}
+
+/**
+ * Helper function to get results for the result block.
+ */
+function _voting_module_get_results() {
+  // Load results from the database.
+  // This function should return the necessary data for the result block.
+  // You can use the VotingResultsService to get results.
+  $question_id = \Drupal::request()->query->get('question_id');
+  if ($question_id) {
+    /** @var \Drupal\voting_module\Service\VotingResultsService $results_service */
+    $results_service = \Drupal::service('voting_module.voting_results_service');
+    $question = \Drupal::entityTypeManager()->getStorage('voting_module_question')->load($question_id);
+    if ($question) {
+      return $results_service->getResults($question);
+    }
+  }
+  return [];
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for voting_block theme hook.
+ */
+function template_preprocess_voting_block(&$variables) {
+  // Preprocess logic for the voting block template.
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for result_block theme hook.
+ */
+function template_preprocess_result_block(&$variables) {
+  // Preprocess logic for the result block template.
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for admin_question_view theme hook.
+ */
+function template_preprocess_admin_question_view(&$variables) {
+  // Preprocess logic for the admin question view template.
+  $question = $variables['question'];
+  $answer_options = \Drupal::entityTypeManager()->getStorage('voting_module_answer_option')
+    ->loadByProperties(['question' => $question->id()]);
+  $variables['answers'] = $answer_options;
+}
+
+/**
+ * Implements hook_cron().
+ */
+function voting_module_cron() {
+  // Perform periodic tasks for the voting module.
+}
+
+/**
+ * Implements hook_install().
+ */
+function voting_module_install() {
+  // Perform installation tasks for the voting module.
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function voting_module_uninstall() {
+  // Perform uninstallation tasks for the voting module.
+}
