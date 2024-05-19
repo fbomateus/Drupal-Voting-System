@@ -1,0 +1,37 @@
+# Define asset libraries for the voting module.
+# This file registers CSS and JS libraries used by the voting module.
+
+voting_block:
+  version: 1.x
+  css:
+    theme:
+      css/voting_module.css: {}
+  js:
+    js/voting_block.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
+
+result_block:
+  version: 1.x
+  css:
+    theme:
+      css/voting_module.css: {}
+  js:
+    js/result_block.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
+
+admin_styles:
+  version: 1.x
+  css:
+    theme:
+      css/admin_styles.css: {}
+  dependencies:
+    - core/drupal
+
+# Ensure that the CSS and JS files are properly integrated and loaded with the respective blocks.
+# Dependencies are specified to ensure proper loading order and functionality.
