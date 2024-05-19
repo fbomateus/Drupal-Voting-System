@@ -1,0 +1,198 @@
+# Route for the Voting Module settings page.
+voting_module.settings:
+  path: '/admin/config/voting_module'
+  defaults:
+    _form: '\Drupal\voting_module\Form\VotingSettingsForm'
+    _title: 'Voting Module Settings'
+  requirements:
+    _permission: 'administer voting module'
+
+# API route to get all questions.
+voting_module.api.questions:
+  path: '/api/voting_module/questions'
+  defaults:
+    _controller: '\Drupal\voting_module\Controller\ApiController::getAllQuestions'
+    _title: 'Get All Questions'
+  requirements:
+    _permission: 'access content'
+  methods: [GET]
+
+# API route to get details of a specific question by ID.
+voting_module.api.question:
+  path: '/api/voting_module/question/{question_id}'
+  defaults:
+    _controller: '\Drupal\voting_module\Controller\ApiController::getQuestion'
+    _title: 'Get Question'
+  requirements:
+    _permission: 'access content'
+    _entity_access: 'voting_module_question.view'
+  methods: [GET]
+
+# API route to submit a vote.
+voting_module.api.submit_vote:
+  path: '/api/voting_module/vote'
+  defaults:
+    _controller: '\Drupal\voting_module\Controller\ApiController::submitVote'
+    _title: 'Submit Vote'
+  requirements:
+    _permission: 'vote on questions'
+  methods: [POST]
+
+# API route to get voting results for a specific question by ID.
+voting_module.api.results:
+  path: '/api/voting_module/results/{question_id}'
+  defaults:
+    _controller: '\Drupal\voting_module\Controller\ApiController::getResults'
+    _title: 'Get Voting Results'
+  requirements:
+    _permission: 'view voting results'
+    _entity_access: 'voting_module_question.view'
+  methods: [GET]
+
+# Route for the collection of Question entities.
+entity.voting_module_question.collection:
+  path: '/admin/content/question'
+  defaults:
+    _entity_list: 'voting_module_question'
+    _title: 'Questions'
+  requirements:
+    _permission: 'administer voting module'
+
+# Route for viewing a single Question entity.
+entity.voting_module_question.canonical:
+  path: '/admin/content/question/{voting_module_question}'
+  defaults:
+    _entity_view: 'voting_module_question.full'
+    _title: 'View Answer Option'
+  requirements:
+    _entity_access: 'voting_module_question.view'
+
+# Route to add a new Question entity.
+entity.voting_module_question.add_form:
+  path: '/admin/content/question/add'
+  defaults:
+    _entity_form: 'voting_module_question.add'
+    _title: 'Add Question'
+  requirements:
+    _permission: 'administer voting module'
+
+# Route to edit an existing Question entity.
+entity.voting_module_question.edit_form:
+  path: '/admin/content/question/{voting_module_question}/edit'
+  defaults:
+    _entity_form: 'voting_module_question.edit'
+    _title: 'Edit Question'
+  requirements:
+    _entity_access: 'voting_module_question.update'
+
+# Route to delete an existing Question entity.
+entity.voting_module_question.delete_form:
+  path: '/admin/content/question/{voting_module_question}/delete'
+  defaults:
+    _entity_form: 'voting_module_question.delete'
+    _title: 'Delete Question'
+  requirements:
+    _entity_access: 'voting_module_question.delete'
+
+# Route for the collection of AnswerOption entities.
+entity.voting_module_answer_option.collection:
+  path: '/admin/content/answer_option'
+  defaults:
+    _entity_list: 'voting_module_answer_option'
+    _title: 'Answer Options'
+  requirements:
+    _permission: 'administer voting module'
+
+# Route for viewing a single AnswerOption entity.
+entity.voting_module_answer_option.canonical:
+  path: '/admin/content/answer_option/{voting_module_answer_option}'
+  defaults:
+    _entity_view: 'voting_module_answer_option.full'
+    _title: 'View Answer Option'
+  requirements:
+    _entity_access: 'voting_module_answer_option.view'
+
+# Route to add a new AnswerOption entity.
+entity.voting_module_answer_option.add_form:
+  path: '/admin/content/answer_option/add'
+  defaults:
+    _entity_form: 'voting_module_answer_option.add'
+    _title: 'Add Answer Option'
+  requirements:
+    _permission: 'administer voting module'
+
+# Route to edit an existing AnswerOption entity.
+entity.voting_module_answer_option.edit_form:
+  path: '/admin/content/answer_option/{voting_module_answer_option}/edit'
+  defaults:
+    _entity_form: 'voting_module_answer_option.edit'
+    _title: 'Edit Answer Option'
+  requirements:
+    _entity_access: 'voting_module_answer_option.update'
+
+# Route to delete an existing AnswerOption entity.
+entity.voting_module_answer_option.delete_form:
+  path: '/admin/content/answer_option/{voting_module_answer_option}/delete'
+  defaults:
+    _entity_form: 'voting_module_answer_option.delete'
+    _title: 'Delete Answer Option'
+  requirements:
+    _entity_access: 'voting_module_answer_option.delete'
+
+# Route for the collection of Assessment entities.
+entity.voting_module_assessment.collection:
+  path: '/admin/content/assessment'
+  defaults:
+    _entity_list: 'voting_module_assessment'
+    _title: 'Assessments'
+  requirements:
+    _permission: 'administer voting module'
+
+# Route for viewing a single Assessment entity.
+entity.voting_module_assessment.canonical:
+  path: '/admin/content/assessment/{voting_module_assessment}'
+  defaults:
+    _entity_view: 'voting_module_assessment.full'
+    _title: 'View Assessment'
+  requirements:
+    _entity_access: 'voting_module_assessment.view'
+
+# Route for the collection of Result entities.
+entity.voting_module_result.collection:
+  path: '/admin/content/result'
+  defaults:
+    _entity_list: 'voting_module_result'
+    _title: 'Results'
+  requirements:
+    _permission: 'administer voting module'
+
+# Route for viewing a single Result entity.
+entity.voting_module_result.canonical:
+  path: '/admin/content/result/{voting_module_result}'
+  defaults:
+    _entity_view: 'voting_module_result.full'
+    _title: 'View Result'
+  requirements:
+    _entity_access: 'voting_module_result.view'
+
+# Route for the admin question view.
+voting_module.admin_question_view:
+  path: '/admin/content/question/{question_id}/view'
+  defaults:
+    _controller: '\Drupal\voting_module\Controller\AdminController::viewQuestion'
+    _title: 'View Question'
+  requirements:
+    _permission: 'administer voting module'
+  options:
+    parameters:
+      question_id:
+        type: 'entity:voting_module_question'
+
+# Route for the admin question list.
+voting_module.admin_question_list:
+  path: '/admin/content/questions'
+  defaults:
+    _controller: '\Drupal\voting_module\Controller\AdminController::listQuestions'
+    _title: 'Questions'
+  requirements:
+    _permission: 'administer voting module'
