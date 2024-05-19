@@ -1,0 +1,68 @@
+# Define services for the voting module.
+# This file registers services used by the voting module, integrating them with the Drupal service container.
+
+services:
+
+  # Service for handling voting logic.
+  voting_module.voting_service:
+    class: 'Drupal\voting_module\Service\VotingService'
+    arguments: ['@entity_type.manager', '@event_dispatcher']
+
+  # Service for handling voting results logic.
+  voting_module.voting_results_service:
+    class: 'Drupal\voting_module\Service\VotingResultsService'
+    arguments: ['@entity_type.manager', '@event_dispatcher']
+
+  # Event subscriber for voting events.
+  voting_module.voting_event_subscriber:
+    class: 'Drupal\voting_module\EventSubscriber\VotingEventSubscriber'
+    arguments: ['@logger.channel.voting']
+    tags:
+      - { name: event_subscriber }
+
+  # Logger channel for the voting module.
+  logger.channel.voting:
+    class: 'Psr\Log\LoggerInterface'
+    factory: ['@logger.factory', get]
+    arguments: ['voting']
+
+  # Controller for API endpoints.
+  voting_module.api_controller:
+    class: 'Drupal\voting_module\Controller\ApiController'
+    arguments: ['@voting_module.voting_service', '@entity_type.manager']
+    tags:
+      - { name: controller.service_arguments }
+
+  # Controller for administrative functions.
+  voting_module.admin_controller:
+    class: 'Drupal\voting_module\Controller\AdminController'
+    arguments: ['@entity_type.manager', '@voting_module.voting_results_service']
+    tags:
+      - { name: controller.service_arguments }
+
+  # Access control handler for Question entities.
+  voting_module.question_access_control_handler:
+    class: 'Drupal\voting_module\QuestionAccessControlHandler'
+    arguments: ['@entity_type.manager', '@string_translation']
+
+  # Access control handler for AnswerOption entities.
+  voting_module.answer_option_access_control_handler:
+    class: 'Drupal\voting_module\AnswerOptionAccessControlHandler'
+    arguments: ['@entity_type.manager', '@string_translation']
+
+  # Access control handler for Assessment entities.
+  voting_module.assessment_access_control_handler:
+    class: 'Drupal\voting_module\AssessmentAccessControlHandler'
+    arguments: ['@entity_type.manager', '@string_translation']
+
+  # Access control handler for Result entities.
+  voting_module.result_access_control_handler:
+    class: 'Drupal\voting_module\ResultAccessControlHandler'
+    arguments: ['@entity_type.manager', '@string_translation']
+
+  # Entity reference selection plugin for filtering questions.
+  plugin.entity_reference_selection.voting_module_question_filter:
+    class: 'Drupal\voting_module\Plugin\EntityReferenceSelection\QuestionReferenceSelection'
+    arguments: ['@entity_type.manager', '@module_handler', '@current_user', '@entity_field.manager', '@entity_type.bundle.info', '@entity.repository', '@database']
+    tags:
+      - { name: 'entity_reference_selection', entity_type: 'voting_module_question', group: 'default' }
