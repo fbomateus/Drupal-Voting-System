@@ -1,0 +1,195 @@
+/**
+ * @file
+ * CSS for the Voting Module.
+ */
+
+/* General styles for the voting block */
+.voting-block {
+  background-color: #f9f9f9;
+  border: 1px solid #ccc;
+  padding: 15px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+.voting-block h2 {
+  font-size: 24px;
+  margin-bottom: 15px;
+}
+
+.voting-block .form-group {
+  margin-bottom: 15px;
+}
+
+.voting-block .form-group label {
+  font-weight: bold;
+}
+
+.voting-block .form-control {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+}
+
+.voting-block .btn-primary {
+  background-color: #007bff;
+  border-color: #007bff;
+  padding: 10px 15px;
+  font-size: 16px;
+  border-radius: 5px;
+}
+
+/* Styles for the result block */
+.voting-results-block {
+  background-color: #f9f9f9;
+  border: 1px solid #ccc;
+  padding: 15px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+.voting-results-block h2 {
+  font-size: 24px;
+  margin-bottom: 15px;
+}
+
+.voting-results-block table {
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.voting-results-block table th,
+.voting-results-block table td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.voting-results-block table th {
+  background-color: #f1f1f1;
+}
+
+.voting-results-block table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+/* Styles for the admin question view */
+.admin-question-view {
+  background-color: #f9f9f9;
+  border: 1px solid #ccc;
+  padding: 15px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+.admin-question-view h2,
+.admin-question-view h3 {
+  font-size: 24px;
+  margin-bottom: 15px;
+}
+
+.admin-question-view p {
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.admin-question-view ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.admin-question-view ul li {
+  background-color: #f1f1f1;
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+}
+
+.admin-question-view ul li img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin-top: 10px;
+}
+
+/* Styles for form elements */
+.form-check {
+  margin-bottom: 10px;
+}
+
+.form-check-label {
+  margin-left: 5px;
+}
+
+.form-check-input {
+  margin-top: 5px;
+}
+
+/* Styles for messages */
+.status-message {
+  padding: 10px;
+  background-color: #dff0d8;
+  border: 1px solid #d6e9c6;
+  color: #3c763d;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+.error-message {
+  padding: 10px;
+  background-color: #f2dede;
+  border: 1px solid #ebccd1;
+  color: #a94442;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+/* Ensure proper styling for buttons */
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+/* Ensure consistent input and button styles */
+input[type="text"],
+input[type="number"],
+input[type="radio"],
+select,
+button {
+  font-family: Arial, sans-serif;
+}
+
+/* Ensure responsive design */
+@media (max-width: 600px) {
+  .voting-block,
+  .voting-results-block,
+  .admin-question-view {
+    padding: 10px;
+  }
+
+  .voting-block h2,
+  .voting-results-block h2,
+  .admin-question-view h2,
+  .admin-question-view h3 {
+    font-size: 20px;
+  }
+
+  .form-group,
+  .form-check {
+    margin-bottom: 10px;
+  }
+
+  .form-group label,
+  .form-check-label {
+    font-size: 14px;
+  }
+
+  .btn-primary {
+    font-size: 14px;
+    padding: 8px 10px;
+  }
+}
