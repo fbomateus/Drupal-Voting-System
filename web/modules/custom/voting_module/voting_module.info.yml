@@ -1,0 +1,80 @@
+name: 'Voting Module'
+type: module
+description: 'Provides a custom voting system.'
+core_version_requirement: ^10
+package: Custom
+dependencies:
+  - drupal:node
+  - drupal:user
+  - drupal:field
+  - drupal:views
+  - drupal:options
+  - drupal:text
+  - drupal:file
+  - drupal:datetime
+
+# Specifies where the configuration is saved.
+config:
+  install:
+    - voting_module.settings
+
+# Defines the libraries provided by this module.
+libraries:
+  - voting_module/voting_block
+  - voting_module/result_block
+
+# Specifies the routes and services provided by this module.
+routes:
+  - voting_module.routing.yml
+services:
+  - voting_module.services.yml
+
+# Defines the permissions provided by this module.
+permissions:
+  - voting_module.permissions.yml
+
+# Defines the menu links provided by this module.
+links:
+  menu:
+    - voting_module.links.menu.yml
+
+# Specifies that this module has templates.
+templates:
+  - voting-block.html.twig
+  - result-block.html.twig
+  - admin-question-view.html.twig
+  - item-list.html.twig
+
+# Version of the module.
+version: '1.0.0'
+
+# Specifies where the source files are located.
+src:
+  - Entity
+  - Controller
+  - Event
+  - EventSubscriber
+  - Form
+  - Plugin/Block
+  - Service
+  - Tests/Functional
+  - Tests/Unit
+
+# Specifies the theme hook implementation.
+theme:
+  - voting_block
+  - result_block
+  - admin_question_view
+  - item_list
+
+# Specifies the tests to be run.
+tests:
+  functional:
+    - Drupal\Tests\voting_module\Functional\VotingFunctionalTest
+  unit:
+    - Drupal\Tests\voting_module\Unit\VotingServiceTest
+
+# Specifies additional metadata.
+project: 'Voting Module'
+project_status: 'active'
+project_category: 'Custom'
