@@ -1,0 +1,65 @@
+# Voting Module Settings menu link.
+voting_module.settings:
+  title: 'Voting Module Settings'
+  description: 'Configure settings for the Voting Module.'
+  parent: system.admin_config_system
+  route_name: voting_module.settings
+  weight: 100
+
+# Voting Module: Manage Questions menu link.
+voting_module.question_list:
+  title: 'Manage Questions'
+  description: 'View and manage questions.'
+  parent: system.admin_content
+  route_name: entity.voting_module_question.collection
+  weight: 1
+
+# Voting Module: Add Question menu link.
+voting_module.question_add:
+  title: 'Add Question'
+  description: 'Add a new question.'
+  parent: voting_module.question_list
+  route_name: entity.voting_module_question.add_form
+  weight: 2
+
+# Voting Module: Manage Answer Options menu link.
+voting_module.answer_option_list:
+  title: 'Manage Answer Options'
+  description: 'View and manage answer options.'
+  parent: system.admin_content
+  route_name: entity.voting_module_answer_option.collection
+  weight: 3
+
+# Voting Module: Add Answer Option menu link.
+voting_module.answer_option_add:
+  title: 'Add Answer Option'
+  description: 'Add a new answer option.'
+  parent: voting_module.answer_option_list
+  route_name: entity.voting_module_answer_option.add_form
+  weight: 4
+
+# Voting Module: Manage Assessments menu link.
+voting_module.assessment_list:
+  title: 'Manage Assessments'
+  description: 'View and manage assessments.'
+  parent: system.admin_content
+  route_name: entity.voting_module_assessment.collection
+  weight: 5
+
+# Voting Module: Manage Results menu link.
+voting_module.result_list:
+  title: 'Manage Results'
+  description: 'View and manage results.'
+  parent: system.admin_content
+  route_name: entity.voting_module_result.collection
+  weight: 6
+
+# Voting Module: View Question Details menu link.
+# voting_module.view_question:
+#   title: 'View Question'
+#   description: 'View details of a specific question.'
+#   parent: voting_module.question_list
+#   route_name: entity.voting_module_question.canonical
+#   route_parameters:
+#     voting_module_question: ~
+#   weight: 7
