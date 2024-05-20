@@ -28,7 +28,7 @@
                   <div class="answer-option-item">
                     <img src="{{ option.image }}" alt="{{ option.title }}">
                     <label>
-                      <input type="radio" name="answer_option" value="{{ option_id }}"> {{ 'Select'|t }}
+                      <input type="radio" name="answer_option" value="{{ option_id }}" data-selected-option="image"> {{ 'Image'|t }}
                     </label>
                   </div>
                 {% endif %}
@@ -36,7 +36,7 @@
                   <div class="answer-option-item">
                     <h4>{{ option.title }}</h4>
                     <label>
-                      <input type="radio" name="answer_option" value="{{ option_id }}"> {{ 'Select'|t }}
+                      <input type="radio" name="answer_option" value="{{ option_id }}" data-selected-option="title"> {{ 'Title'|t }}
                     </label>
                   </div>
                 {% endif %}
@@ -44,7 +44,7 @@
                   <div class="answer-option-item">
                     <p>{{ option.description }}</p>
                     <label>
-                      <input type="radio" name="answer_option" value="{{ option_id }}"> {{ 'Select'|t }}
+                      <input type="radio" name="answer_option" value="{{ option_id }}" data-selected-option="description"> {{ 'Description'|t }}
                     </label>
                   </div>
                 {% endif %}
