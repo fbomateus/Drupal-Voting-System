@@ -39,13 +39,6 @@ services:
     tags:
       - { name: controller.service_arguments }
 
-  # Controller for administrative functions.
-  voting_module.admin_controller:
-    class: 'Drupal\voting_module\Controller\AdminController'
-    arguments: ['@entity_type.manager', '@voting_module.voting_results_service']
-    tags:
-      - { name: controller.service_arguments }
-
   # Access control handler for Question entities.
   voting_module.question_access_control_handler:
     class: 'Drupal\voting_module\QuestionAccessControlHandler'
