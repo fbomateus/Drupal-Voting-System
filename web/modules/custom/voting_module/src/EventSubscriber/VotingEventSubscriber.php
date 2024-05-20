@@ -39,11 +39,13 @@ class VotingEventSubscriber implements EventSubscriberInterface {
     $account = $event->getAccount();
     $question = $event->getQuestion();
     $answer = $event->getAnswer();
+    $selected_option = $event->getSelectedOption();
 
-    $this->logger->info('User @user voted on question @question with answer @answer.', [
+    $this->logger->info('User @user voted on question @question with answer @answer and selected option @option.', [
       '@user' => $account->getDisplayName(),
       '@question' => $question->label(),
       '@answer' => $answer->label(),
+      '@option' => $selected_option,
     ]);
   }
 
@@ -62,9 +64,11 @@ class VotingEventSubscriber implements EventSubscriberInterface {
     ]);
 
     foreach ($results as $answer_id => $data) {
-      $this->logger->info('Answer @answer received @count votes.', [
+      $selected_option = isset($data['selected_option']) ? $data['selected_option'] : 'N/A';
+      $this->logger->info('Answer @answer received @count votes. Selected option: @option.', [
         '@answer' => $answer_id,
         '@count' => $data['count'],
+        '@option' => $selected_option,
       ]);
     }
   }
