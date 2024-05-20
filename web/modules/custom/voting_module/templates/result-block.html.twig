@@ -24,7 +24,6 @@
           <th>{{ 'Answer Option'|t }}</th>
           <th>{{ 'Votes'|t }}</th>
           <th>{{ 'Percentage'|t }}</th>
-          <th>{{ 'Average Rating'|t }}</th>
         </tr>
       </thead>
       <tbody>
@@ -33,7 +32,6 @@
             <td>{{ data.label }}</td>
             <td>{{ data.count }}</td>
             <td>{{ percentages[answer_id]|number_format(2) }}%</td>
-            <td>{{ average_ratings[answer_id]|number_format(2) }}</td>
           </tr>
         {% endfor %}
       </tbody>
