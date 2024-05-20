@@ -17,15 +17,23 @@ voting_module.api.questions:
     _permission: 'access content'
   methods: [GET]
 
+voting_module.api.get_all_questions:
+  path: '/api/voting_module/questions'
+  defaults:
+    _controller: '\Drupal\voting_module\Controller\ApiController::getAllQuestions'
+    _title: 'Get All Questions'
+  requirements:
+    _permission: 'access content'
+  methods: [GET]
+
 # API route to get details of a specific question by ID.
-voting_module.api.question:
-  path: '/api/voting_module/question/{question_id}'
+voting_module.api.get_question:
+  path: '/api/voting_module/questions/{question_id}'
   defaults:
     _controller: '\Drupal\voting_module\Controller\ApiController::getQuestion'
     _title: 'Get Question'
   requirements:
     _permission: 'access content'
-    _entity_access: 'voting_module_question.view'
   methods: [GET]
 
 # API route to submit a vote.
@@ -35,18 +43,17 @@ voting_module.api.submit_vote:
     _controller: '\Drupal\voting_module\Controller\ApiController::submitVote'
     _title: 'Submit Vote'
   requirements:
-    _permission: 'vote on questions'
+    _permission: 'access content'
   methods: [POST]
 
 # API route to get voting results for a specific question by ID.
-voting_module.api.results:
-  path: '/api/voting_module/results/{question_id}'
+voting_module.api.get_results:
+  path: '/api/voting_module/questions/{question_id}/results'
   defaults:
     _controller: '\Drupal\voting_module\Controller\ApiController::getResults'
-    _title: 'Get Voting Results'
+    _title: 'Get Results'
   requirements:
-    _permission: 'view voting results'
-    _entity_access: 'voting_module_question.view'
+    _permission: 'access content'
   methods: [GET]
 
 # Route for the collection of Question entities.

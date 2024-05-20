@@ -9,6 +9,7 @@ use Drupal\voting_module\Service\VotingService;
 use Drupal\voting_module\Service\VotingResultsService;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
  * Class ApiController
@@ -138,11 +139,16 @@ class ApiController extends ControllerBase {
     $answer_id = $data['answer_id'];
     $selected_option = $data['selected_option'];
 
+    // Ensure the user is logged in before processing the vote.
+    if ($user->isAnonymous()) {
+      throw new AccessDeniedHttpException('You must be logged in to vote.');
+    }
+
     $question = $this->entityTypeManager->getStorage('voting_module_question')->load($question_id);
     $answer = $this->entityTypeManager->getStorage('voting_module_answer_option')->load($answer_id);
 
     if ($question && $answer) {
-      // Process the vote and save the selected option
+      // Process the vote and save the selected option.
       $result = $this->votingService->processVote($user, $question, $answer, $selected_option);
       if ($result) {
         return new JsonResponse(['message' => 'Vote submitted successfully']);
@@ -175,8 +181,8 @@ class ApiController extends ControllerBase {
         'selected_option' => [],
       ];
 
-      foreach ($results as $result) {
-        $data['selected_option'][] = $result->get('selected_option')->target_id;
+      foreach ($results as $answer_id => $result) {
+        $data['selected_option'][] = $result['selected_option'] ?? 'N/A';
       }
 
       return new JsonResponse($data);
