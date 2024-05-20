@@ -3,7 +3,6 @@
 namespace Drupal\voting_module\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
-use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -96,11 +95,21 @@ class VotingBlock extends BlockBase implements ContainerFactoryPluginInterface {
    */
   public function build() {
     $questions = $this->entityTypeManager->getStorage('voting_module_question')->loadMultiple();
-
     $options = [];
+    $votes = $this->votingResultsService->getUserVotes($this->currentUser->id());
+
     foreach ($questions as $question) {
       /* @var \Drupal\voting_module\Entity\Question $question */
-      $options[$question->id()] = $question->label();
+      $answer_options = $this->getAnswerOptions($question);
+      $has_voted = !$this->currentUser->hasPermission('administer site') && isset($votes[$question->id()]);
+      $total_votes = $this->votingResultsService->getTotalVotes($question);
+
+      $options[$question->id()] = [
+        'label' => $question->label(),
+        'answer_options' => $answer_options,
+        'has_voted' => $has_voted,
+        'total_votes' => $total_votes,
+      ];
     }
 
     return [
@@ -115,45 +124,60 @@ class VotingBlock extends BlockBase implements ContainerFactoryPluginInterface {
   }
 
   /**
+   * Retrieves the answer options for a given question.
+   *
+   * @param \Drupal\voting_module\Entity\Question $question
+   *   The question entity.
+   *
+   * @return array
+   *   An array of answer options with image, title, and description.
+   */
+  protected function getAnswerOptions($question) {
+    $answer_options = $this->entityTypeManager->getStorage('voting_module_answer_option')->loadByProperties(['question' => $question->id()]);
+    $options = [];
+
+    foreach ($answer_options as $answer_option) {
+      /* @var \Drupal\voting_module\Entity\AnswerOption $answer_option */
+      $option = [];
+      if ($answer_option->get('title')->value) {
+        $option['title'] = $answer_option->get('title')->value;
+      }
+      if ($answer_option->get('image')->entity) {
+        $option['image'] = $this->getImageUrl($answer_option->get('image')->entity);
+      }
+      if ($answer_option->get('description')->value) {
+        $option['description'] = $answer_option->get('description')->value;
+      }
+
+      if (!empty($option)) {
+        $options[$answer_option->id()] = $option;
+      }
+    }
+
+    return $options;
+  }
+
+  /**
+   * Gets the URL of an image file entity.
+   *
+   * @param \Drupal\file\FileInterface|null $file
+   *   The file entity.
+   *
+   * @return string
+   *   The URL of the image.
+   */
+  protected function getImageUrl($file) {
+    if ($file) {
+      return file_create_url($file->getFileUri());
+    }
+    return '';
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function getCacheMaxAge() {
     return 0;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function blockForm($form, FormStateInterface $form_state) {
-    $form['question'] = [
-      '#type' => 'select',
-      '#title' => $this->t('Select Question'),
-      '#options' => $this->getQuestions(),
-      '#default_value' => $this->configuration['question'] ?? '',
-    ];
-    return $form;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function blockSubmit($form, FormStateInterface $form_state) {
-    $this->configuration['question'] = $form_state->getValue('question');
-  }
-
-  /**
-   * Retrieves the list of questions.
-   *
-   * @return array
-   *   An array of question labels keyed by their IDs.
-   */
-  protected function getQuestions() {
-    $questions = $this->entityTypeManager->getStorage('voting_module_question')->loadMultiple();
-    $options = [];
-    foreach ($questions as $question) {
-      $options[$question->id()] = $question->label();
-    }
-    return $options;
   }
 
 }
