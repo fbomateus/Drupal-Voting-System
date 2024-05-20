@@ -10,6 +10,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\voting_module\Service\VotingService;
 use Drupal\voting_module\Service\VotingResultsService;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\File\FileUrlGeneratorInterface;
 
 /**
  * Provides a 'VotingBlock' block.
@@ -58,6 +59,13 @@ class VotingBlock extends BlockBase implements ContainerFactoryPluginInterface {
   protected $configFactory;
 
   /**
+   * The file URL generator service.
+   *
+   * @var \Drupal\Core\File\FileUrlGeneratorInterface
+   */
+  protected $fileUrlGenerator;
+
+  /**
    * Constructs a new VotingBlock instance.
    *
    * @param array $configuration
@@ -76,14 +84,27 @@ class VotingBlock extends BlockBase implements ContainerFactoryPluginInterface {
    *   The voting results service.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
+   * @param \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator
+   *   The file URL generator service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, AccountInterface $current_user, VotingService $voting_service, VotingResultsService $voting_results_service, ConfigFactoryInterface $config_factory) {
+  public function __construct(
+      array $configuration, 
+      $plugin_id, 
+      $plugin_definition, 
+      EntityTypeManagerInterface $entity_type_manager, 
+      AccountInterface $current_user, 
+      VotingService $voting_service, 
+      VotingResultsService $voting_results_service, 
+      ConfigFactoryInterface $config_factory, 
+      FileUrlGeneratorInterface $file_url_generator
+    ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->entityTypeManager = $entity_type_manager;
     $this->currentUser = $current_user;
     $this->votingService = $voting_service;
     $this->votingResultsService = $voting_results_service;
     $this->configFactory = $config_factory;
+    $this->fileUrlGenerator = $file_url_generator;
   }
 
   /**
@@ -98,7 +119,8 @@ class VotingBlock extends BlockBase implements ContainerFactoryPluginInterface {
       $container->get('current_user'),
       $container->get('voting_module.voting_service'),
       $container->get('voting_module.voting_results_service'),
-      $container->get('config.factory')
+      $container->get('config.factory'),
+      $container->get('file_url_generator')
     );
   }
 
@@ -192,7 +214,7 @@ class VotingBlock extends BlockBase implements ContainerFactoryPluginInterface {
    */
   protected function getImageUrl($file) {
     if ($file) {
-      return file_create_url($file->getFileUri());
+      return $this->fileUrlGenerator->generateAbsoluteString($file->getFileUri());
     }
     return '';
   }
