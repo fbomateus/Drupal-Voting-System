@@ -3,42 +3,6 @@
  * CSS for the Voting Module.
  */
 
-/* General styles for the voting block */
-.voting-block {
-  background-color: #f9f9f9;
-  border: 1px solid #ccc;
-  padding: 15px;
-  border-radius: 5px;
-  margin-bottom: 20px;
-}
-
-.voting-block h2 {
-  font-size: 24px;
-  margin-bottom: 15px;
-}
-
-.voting-block .form-group {
-  margin-bottom: 15px;
-}
-
-.voting-block .form-group label {
-  font-weight: bold;
-}
-
-.voting-block .form-control {
-  width: 100%;
-  padding: 8px;
-  margin-top: 5px;
-}
-
-.voting-block .btn-primary {
-  background-color: #007bff;
-  border-color: #007bff;
-  padding: 10px 15px;
-  font-size: 16px;
-  border-radius: 5px;
-}
-
 /* Styles for the result block */
 .voting-results-block {
   background-color: #f9f9f9;

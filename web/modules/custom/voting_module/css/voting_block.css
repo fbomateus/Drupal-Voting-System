@@ -1,29 +1,92 @@
+/**
+ * @file
+ * CSS for the Voting Module.
+ */
+
+/* General styles for the voting block */
+
+.voting-block {
+  display: grid;
+  grid-row-gap: 0.625rem;
+}
+
 .voting-block .question {
-  margin-bottom: 20px;
+  background-color: #FFFFFF;
+  border: 1px solid #212529;
+  border-radius: 1.5rem;
+  padding: 0rem 1rem;
 }
 
-.voting-block .answer-options {
-  margin-top: 10px;
-}
-
-.voting-block .answer-option {
-  margin-bottom: 10px;
-}
-
-.voting-block .answer-option-item {
+.voting-block .question .question-options {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
+  justify-content: space-between;
 }
 
-.voting-block .answer-option-item img {
-  max-width: 100px;
-  margin-right: 10px;
+.voting-block .question .question-options .question-title {
+  color: #212529;
+  font-size: 1.75rem;
+  line-height: 1.2;
+  min-width: 16rem;
 }
 
-.voting-block .answer-option-item h4 {
-  margin: 0 10px 0 0;
+.voting-block .question .question-options .question-title div {
+  font-size: 1rem;
+  font-weight: normal;
 }
 
-.voting-block .answer-option-item label {
-  margin-left: auto;
+.voting-block .question .question-options .toggle-answer-options {
+  background-color: #3464BE;
+  color: #FFFFFF;
+  border: none;
+  padding: 1rem 1.2rem;
+  width: fit-content;
+  font-weight: 400;
+  cursor: pointer;
+  border-radius: 1rem;
+  height: 2.875rem;
+  margin: 0rem 0rem 1rem;
+}
+
+.voting-block .question .answer-options .answer-option {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  column-gap: 0.625rem;
+}
+
+.voting-block .question .answer-options .answer-option .answer-option-item label {
+  font-size: 1rem;
+  line-height: 1.75rem;
+  color: #212529;
+  cursor: pointer;
+}
+
+.voting-block .question .answer-options .answer-option .answer-option-item .item {
+  margin-top: 1rem;
+  max-width: 16rem;
+}
+
+.voting-block .question .answer-options .answer-option .answer-option-item .item p {
+  font-size: 1rem;
+  line-height: 1.75rem;
+  color: #212529;
+}
+
+.voting-block .question .answer-options .answer-option .answer-option-item .item img {
+  width: 100%;
+  height: auto;
+  width: fit-content;
+}
+
+.voting-block .question .answer-options .voting-submit {
+  background-color: #212529;
+  color: #FFFFFF;
+  border: none;
+  padding: 1rem 1.2rem;
+  font-weight: 400;
+  cursor: pointer;
+  border-radius: 1rem;
+  margin: 1rem 0rem;
 }
