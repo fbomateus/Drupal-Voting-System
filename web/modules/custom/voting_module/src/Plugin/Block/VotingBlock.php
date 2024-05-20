@@ -109,6 +109,7 @@ class VotingBlock extends BlockBase implements ContainerFactoryPluginInterface {
     $config = $this->configFactory->get('voting_module.settings');
     $enable_voting = $config->get('enable_voting');
     $show_results = $config->get('show_results');
+    $is_logged_in = $this->currentUser->isAuthenticated();
 
     $questions = $this->entityTypeManager->getStorage('voting_module_question')->loadMultiple();
     $options = [];
@@ -129,7 +130,9 @@ class VotingBlock extends BlockBase implements ContainerFactoryPluginInterface {
         'label' => $question->label(),
         'answer_options' => $answer_options,
         'has_voted' => $has_voted,
-        'total_votes' => $total_votes
+        'total_votes' => $total_votes,
+        'can_vote' => $enable_voting && $is_logged_in && !$has_voted,
+        'show_results' => $show_results,
       ];
     }
 

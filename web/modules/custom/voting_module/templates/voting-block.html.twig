@@ -15,11 +15,12 @@
     <div class="question">
       <h3>{{ question.label }}</h3>
       {% if question.has_voted %}
-        {% if question.total_votes is not null %}
+        {% if question.show_results and question.total_votes is not null %}
           <p>{{ 'Total Votes:'|t }} {{ question.total_votes }}</p>
         {% endif %}
         <p>{{ 'You have already voted on this question.'|t }}</p>
-      {% else %}
+      {% endif %}
+      {% if question.can_vote %}
         <button class="toggle-answer-options" data-question-id="{{ question_id }}">{{ 'Show Answer Options'|t }}</button>
         <div class="answer-options" id="answer-options-{{ question_id }}" style="display: none;">
           <form class="vote-form" data-question-id="{{ question_id }}">

@@ -46,14 +46,6 @@ class VotingSettingsForm extends ConfigFormBase {
       '#default_value' => $config->get('show_results'),
     ];
 
-    // Allow anonymous voting.
-    $form['anonymous_voting'] = [
-      '#type' => 'checkbox',
-      '#title' => $this->t('Allow Anonymous Voting'),
-      '#description' => $this->t('Allow users who are not logged in to vote.'),
-      '#default_value' => $config->get('anonymous_voting'),
-    ];
-
     return parent::buildForm($form, $form_state);
   }
 
@@ -71,7 +63,6 @@ class VotingSettingsForm extends ConfigFormBase {
     $this->config('voting_module.settings')
       ->set('enable_voting', $form_state->getValue('enable_voting'))
       ->set('show_results', $form_state->getValue('show_results'))
-      ->set('anonymous_voting', $form_state->getValue('anonymous_voting'))
       ->save();
 
     parent::submitForm($form, $form_state);
