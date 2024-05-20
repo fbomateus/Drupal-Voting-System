@@ -73,6 +73,19 @@ class VotingService {
     ]);
     $result->save();
 
+    // Check if an assessment already exists for this question.
+    $assessment_storage = $this->entityTypeManager->getStorage('voting_module_assessment');
+    $assessments = $assessment_storage->loadByProperties(['question_id' => $question->id()]);
+    
+    if (empty($assessments)) {
+      // Create a new assessment entity if none exists.
+      $assessment = $assessment_storage->create([
+        'question_id' => $question->id(),
+        'timestamp' => \Drupal::time()->getRequestTime(),
+      ]);
+      $assessment->save();
+    }
+
     // Dispatch the vote event.
     $event = new VoteEvent($user, $question, $answer, $selected_option);
     $this->eventDispatcher->dispatch($event, 'voting_module.vote');
