@@ -26,14 +26,7 @@ result_block:
     - core/jquery
     - core/drupal
     - core/drupalSettings
-
-admin_styles:
-  version: 1.x
-  css:
-    theme:
-      css/admin_styles.css: {}
-  dependencies:
-    - core/drupal
+    - core/jquery.once
 
 # Ensure that the CSS and JS files are properly integrated and loaded with the respective blocks.
 # Dependencies are specified to ensure proper loading order and functionality.
