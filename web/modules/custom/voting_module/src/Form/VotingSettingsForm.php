@@ -46,15 +46,6 @@ class VotingSettingsForm extends ConfigFormBase {
       '#default_value' => $config->get('show_results'),
     ];
 
-    // Set voting period.
-    $form['voting_period'] = [
-      '#type' => 'number',
-      '#title' => $this->t('Voting Period'),
-      '#description' => $this->t('Set the voting period in days.'),
-      '#default_value' => $config->get('voting_period'),
-      '#min' => 1,
-    ];
-
     // Allow anonymous voting.
     $form['anonymous_voting'] = [
       '#type' => 'checkbox',
@@ -71,12 +62,6 @@ class VotingSettingsForm extends ConfigFormBase {
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     parent::validateForm($form, $form_state);
-
-    // Custom validation for the voting period.
-    $voting_period = $form_state->getValue('voting_period');
-    if ($voting_period < 1) {
-      $form_state->setErrorByName('voting_period', $this->t('The voting period must be at least 1 day.'));
-    }
   }
 
   /**
@@ -86,7 +71,6 @@ class VotingSettingsForm extends ConfigFormBase {
     $this->config('voting_module.settings')
       ->set('enable_voting', $form_state->getValue('enable_voting'))
       ->set('show_results', $form_state->getValue('show_results'))
-      ->set('voting_period', $form_state->getValue('voting_period'))
       ->set('anonymous_voting', $form_state->getValue('anonymous_voting'))
       ->save();
 
