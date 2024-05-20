@@ -100,6 +100,11 @@ class VotingBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
     foreach ($questions as $question) {
       /* @var \Drupal\voting_module\Entity\Question $question */
+      // Skip the question if its visibility is set to false.
+      if (!$question->get('visibility')->value) {
+        continue;
+      }
+
       $answer_options = $this->getAnswerOptions($question);
       $has_voted = !$this->currentUser->hasPermission('administer site') && isset($votes[$question->id()]);
       $total_votes = $this->votingResultsService->getTotalVotes($question);
