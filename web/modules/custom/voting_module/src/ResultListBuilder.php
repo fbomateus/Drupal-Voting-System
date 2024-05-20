@@ -21,6 +21,7 @@ class ResultListBuilder extends EntityListBuilder {
     $header['user'] = $this->t('User');
     $header['question'] = $this->t('Question');
     $header['answer'] = $this->t('Answer');
+    $header['selected_option'] = $this->t('Selected Option');
     $header['timestamp'] = $this->t('Timestamp');
     return $header + parent::buildHeader();
   }
@@ -42,6 +43,7 @@ class ResultListBuilder extends EntityListBuilder {
       'entity.voting_module_answer_option.canonical',
       ['voting_module_answer_option' => $entity->get('answer_id')->entity->id()]
     )->toString();
+    $row['selected_option'] = $entity->get('selected_option')->value;
     $row['timestamp'] = \Drupal::service('date.formatter')->format($entity->get('timestamp')->value, 'short');
     return $row + parent::buildRow($entity);
   }
