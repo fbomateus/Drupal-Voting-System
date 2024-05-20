@@ -61,12 +61,14 @@ class VotingResultsService {
       foreach ($result_entities as $result) {
         /** @var \Drupal\voting_module\Entity\Result $result */
         $answer_id = $result->get('answer_id')->target_id;
-        if (!isset($results[$answer_id])) {
-          $results[$answer_id] = [
+        $selected_option = strtolower($result->get('selected_option')->value);
+        if (!isset($results[$selected_option])) {
+          $results[$selected_option] = [
+            'label' => ucfirst($selected_option),
             'count' => 0,
           ];
         }
-        $results[$answer_id]['count']++;
+        $results[$selected_option]['count']++;
       }
     }
 
@@ -127,8 +129,8 @@ class VotingResultsService {
 
     $percentages = [];
     if ($total_votes > 0) {
-      foreach ($results as $answer_id => $data) {
-        $percentages[$answer_id] = ($data['count'] / $total_votes) * 100;
+      foreach ($results as $option => $data) {
+        $percentages[strtolower($option)] = ($data['count'] / $total_votes) * 100;
       }
     }
 
