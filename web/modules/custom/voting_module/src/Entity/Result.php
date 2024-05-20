@@ -100,6 +100,22 @@ class Result extends ContentEntityBase {
         ],
       ]);
 
+    $fields['selected_option'] = BaseFieldDefinition::create('string')
+      ->setLabel(t('Selected Option'))
+      ->setDescription(t('The type of option selected (title, description, or image).'))
+      ->setSettings([
+        'max_length' => 50,
+      ])
+      ->setDisplayOptions('view', [
+        'label' => 'above',
+        'type' => 'string',
+        'weight' => -1,
+      ])
+      ->setDisplayOptions('form', [
+        'type' => 'string_textfield',
+        'weight' => -1,
+      ]);
+
     $fields['timestamp'] = BaseFieldDefinition::create('timestamp')
       ->setLabel(t('Timestamp'))
       ->setDescription(t('The time when the response was submitted.'))
