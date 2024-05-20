@@ -18,7 +18,7 @@ use Drupal\Core\Entity\EntityStorageInterface;
  *   base_table = "voting_module_assessment",
  *   entity_keys = {
  *     "id" = "id",
- *     "label" = "title",
+ *     "label" = "id",
  *     "uuid" = "uuid"
  *   },
  *   handlers = {
@@ -40,50 +40,18 @@ class Assessment extends ContentEntityBase {
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
     $fields = parent::baseFieldDefinitions($entity_type);
 
-    $fields['title'] = BaseFieldDefinition::create('string')
-      ->setLabel(t('Title'))
-      ->setDescription(t('The title of the assessment.'))
-      ->setSettings([
-        'max_length' => 255,
-        'text_processing' => 0,
-      ])
-      ->setDisplayOptions('view', [
-        'label' => 'above',
-        'type' => 'string',
-        'weight' => -4,
-      ])
-      ->setDisplayOptions('form', [
-        'type' => 'string_textfield',
-        'weight' => -4,
-      ])
-      ->setRequired(TRUE);
-
-    $fields['created'] = BaseFieldDefinition::create('created')
-      ->setLabel(t('Created'))
-      ->setDescription(t('The time that the assessment was created.'))
-      ->setDisplayOptions('view', [
-        'label' => 'above',
-        'type' => 'timestamp',
-        'weight' => -3,
-      ])
-      ->setDisplayOptions('form', [
-        'type' => 'datetime_timestamp',
-        'weight' => -3,
-      ]);
-
-    $fields['question'] = BaseFieldDefinition::create('entity_reference')
-      ->setLabel(t('Question'))
-      ->setDescription(t('The question associated with this assessment.'))
+    $fields['question_id'] = BaseFieldDefinition::create('entity_reference')
+      ->setLabel(t('Question ID'))
+      ->setDescription(t('The ID of the question responded to.'))
       ->setSetting('target_type', 'voting_module_question')
-      ->setSetting('handler', 'default')
       ->setDisplayOptions('view', [
         'label' => 'above',
         'type' => 'entity_reference_label',
-        'weight' => -2,
+        'weight' => -3,
       ])
       ->setDisplayOptions('form', [
         'type' => 'entity_reference_autocomplete',
-        'weight' => -2,
+        'weight' => -3,
         'settings' => [
           'match_operator' => 'CONTAINS',
           'size' => '60',
@@ -92,19 +60,17 @@ class Assessment extends ContentEntityBase {
         ],
       ]);
 
-    // Additional fields for categorization and status
-    $fields['status'] = BaseFieldDefinition::create('boolean')
-      ->setLabel(t('Status'))
-      ->setDescription(t('The status of the assessment (e.g., active or inactive).'))
-      ->setDefaultValue(TRUE)
+    $fields['timestamp'] = BaseFieldDefinition::create('timestamp')
+      ->setLabel(t('Timestamp'))
+      ->setDescription(t('The time when the response was submitted.'))
       ->setDisplayOptions('view', [
         'label' => 'above',
-        'type' => 'boolean',
-        'weight' => -1,
+        'type' => 'timestamp',
+        'weight' => 0,
       ])
       ->setDisplayOptions('form', [
-        'type' => 'boolean_checkbox',
-        'weight' => -1,
+        'type' => 'datetime_timestamp',
+        'weight' => 0,
       ]);
 
     return $fields;
@@ -117,4 +83,5 @@ class Assessment extends ContentEntityBase {
     parent::preSave($storage);
     // Add any specific pre-save logic here if needed.
   }
+
 }
