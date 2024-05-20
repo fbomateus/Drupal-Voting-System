@@ -44,52 +44,60 @@ class VotingService {
   /**
    * Process a vote from a user.
    *
-   * @param \Drupal\Core\Session\AccountInterface $account
+   * @param \Drupal\Core\Session\AccountInterface $user
    *   The user account.
    * @param \Drupal\voting_module\Entity\Question $question
    *   The question being voted on.
    * @param \Drupal\voting_module\Entity\AnswerOption $answer
    *   The answer option chosen.
+   * @param string $selected_option
+   *   The type of option selected (title, description, or image).
    *
    * @return bool
    *   TRUE if the vote was processed successfully, FALSE otherwise.
    */
-  public function processVote(AccountInterface $account, Question $question, AnswerOption $answer) {
-    // Ensure the question and answer are related.
-    if (!$this->validateAnswerForQuestion($question, $answer)) {
+  public function processVote(AccountInterface $user, Question $question, AnswerOption $answer, $selected_option) {
+    // Check if the user has already voted on this question, unless they are an administrator.
+    if (!$user->hasPermission('administer site') && $this->hasUserVoted($user, $question)) {
       return FALSE;
     }
 
     // Create a new result entity.
     $result_storage = $this->entityTypeManager->getStorage('voting_module_result');
     $result = $result_storage->create([
-      'user_id' => $account->id(),
+      'user_id' => $user->id(),
       'question_id' => $question->id(),
       'answer_id' => $answer->id(),
+      'selected_option' => $selected_option,
       'timestamp' => \Drupal::time()->getRequestTime(),
     ]);
     $result->save();
 
     // Dispatch the vote event.
-    $event = new VoteEvent($account, $question, $answer);
+    $event = new VoteEvent($user, $question, $answer, $selected_option);
     $this->eventDispatcher->dispatch($event, 'voting_module.vote');
 
     return TRUE;
   }
 
   /**
-   * Validate that an answer belongs to a question.
+   * Checks if the user has already voted on the given question.
    *
+   * @param \Drupal\Core\Session\AccountInterface $user
+   *   The user.
    * @param \Drupal\voting_module\Entity\Question $question
    *   The question entity.
-   * @param \Drupal\voting_module\Entity\AnswerOption $answer
-   *   The answer option entity.
    *
    * @return bool
-   *   TRUE if the answer belongs to the question, FALSE otherwise.
+   *   TRUE if the user has already voted, FALSE otherwise.
    */
-  protected function validateAnswerForQuestion(Question $question, AnswerOption $answer) {
-    // Validate that the answer's question field matches the question ID.
-    return $answer->get('question')->target_id == $question->id();
+  protected function hasUserVoted(AccountInterface $user, $question) {
+    $query = $this->entityTypeManager->getStorage('voting_module_result')->getQuery()
+      ->condition('user_id', $user->id())
+      ->condition('question_id', $question->id())
+      ->accessCheck(TRUE);
+    
+    $results = $query->execute();
+    return !empty($results);
   }
 }
