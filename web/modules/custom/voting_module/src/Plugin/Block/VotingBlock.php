@@ -9,6 +9,7 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\voting_module\Service\VotingService;
 use Drupal\voting_module\Service\VotingResultsService;
+use Drupal\Core\Config\ConfigFactoryInterface;
 
 /**
  * Provides a 'VotingBlock' block.
@@ -50,6 +51,13 @@ class VotingBlock extends BlockBase implements ContainerFactoryPluginInterface {
   protected $votingResultsService;
 
   /**
+   * The config factory.
+   *
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
+   */
+  protected $configFactory;
+
+  /**
    * Constructs a new VotingBlock instance.
    *
    * @param array $configuration
@@ -66,13 +74,16 @@ class VotingBlock extends BlockBase implements ContainerFactoryPluginInterface {
    *   The voting service.
    * @param \Drupal\voting_module\Service\VotingResultsService $voting_results_service
    *   The voting results service.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   The config factory.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, AccountInterface $current_user, VotingService $voting_service, VotingResultsService $voting_results_service) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, AccountInterface $current_user, VotingService $voting_service, VotingResultsService $voting_results_service, ConfigFactoryInterface $config_factory) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->entityTypeManager = $entity_type_manager;
     $this->currentUser = $current_user;
     $this->votingService = $voting_service;
     $this->votingResultsService = $voting_results_service;
+    $this->configFactory = $config_factory;
   }
 
   /**
@@ -86,7 +97,8 @@ class VotingBlock extends BlockBase implements ContainerFactoryPluginInterface {
       $container->get('entity_type.manager'),
       $container->get('current_user'),
       $container->get('voting_module.voting_service'),
-      $container->get('voting_module.voting_results_service')
+      $container->get('voting_module.voting_results_service'),
+      $container->get('config.factory')
     );
   }
 
@@ -94,6 +106,10 @@ class VotingBlock extends BlockBase implements ContainerFactoryPluginInterface {
    * {@inheritdoc}
    */
   public function build() {
+    $config = $this->configFactory->get('voting_module.settings');
+    $enable_voting = $config->get('enable_voting');
+    $show_results = $config->get('show_results');
+
     $questions = $this->entityTypeManager->getStorage('voting_module_question')->loadMultiple();
     $options = [];
     $votes = $this->votingResultsService->getUserVotes($this->currentUser->id());
@@ -105,15 +121,15 @@ class VotingBlock extends BlockBase implements ContainerFactoryPluginInterface {
         continue;
       }
 
-      $answer_options = $this->getAnswerOptions($question);
+      $answer_options = $enable_voting ? $this->getAnswerOptions($question) : [];
       $has_voted = !$this->currentUser->hasPermission('administer site') && isset($votes[$question->id()]);
-      $total_votes = $this->votingResultsService->getTotalVotes($question);
+      $total_votes = $show_results ? $this->votingResultsService->getTotalVotes($question) : NULL;
 
       $options[$question->id()] = [
         'label' => $question->label(),
         'answer_options' => $answer_options,
         'has_voted' => $has_voted,
-        'total_votes' => $total_votes,
+        'total_votes' => $total_votes
       ];
     }
 

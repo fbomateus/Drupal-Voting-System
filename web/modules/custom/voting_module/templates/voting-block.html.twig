@@ -15,7 +15,9 @@
     <div class="question">
       <h3>{{ question.label }}</h3>
       {% if question.has_voted %}
-        <p>{{ 'Total Votes:'|t }} {{ question.total_votes }}</p>
+        {% if question.total_votes is not null %}
+          <p>{{ 'Total Votes:'|t }} {{ question.total_votes }}</p>
+        {% endif %}
         <p>{{ 'You have already voted on this question.'|t }}</p>
       {% else %}
         <button class="toggle-answer-options" data-question-id="{{ question_id }}">{{ 'Show Answer Options'|t }}</button>
@@ -52,8 +54,9 @@
             {% endfor %}
             {% if question.answer_options is empty %}
               <p>{{ 'No selectable questions available'|t }}</p>
+            {% else %}
+              <button type="submit">{{ 'Vote'|t }}</button>
             {% endif %}
-            <button type="submit">{{ 'Vote'|t }}</button>
           </form>
         </div>
       {% endif %}
