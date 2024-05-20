@@ -4,6 +4,21 @@
  */
 
 (function ($, Drupal) {
+  if (!$.fn.once) {
+    $.fn.once = function (id) {
+      return this.filter(function () {
+        if (!this.once) {
+          this.once = {};
+        }
+        if (!this.once[id]) {
+          this.once[id] = true;
+          return true;
+        }
+        return false;
+      });
+    };
+  }
+  
   Drupal.behaviors.resultBlock = {
     attach: function (context, settings) {
       // Assuming the block has a select element for questions
