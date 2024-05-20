@@ -174,25 +174,3 @@ entity.voting_module_result.canonical:
     _title: 'View Result'
   requirements:
     _entity_access: 'voting_module_result.view'
-
-# Route for the admin question view.
-voting_module.admin_question_view:
-  path: '/admin/content/question/{question_id}/view'
-  defaults:
-    _controller: '\Drupal\voting_module\Controller\AdminController::viewQuestion'
-    _title: 'View Question'
-  requirements:
-    _permission: 'administer voting module'
-  options:
-    parameters:
-      question_id:
-        type: 'entity:voting_module_question'
-
-# Route for the admin question list.
-voting_module.admin_question_list:
-  path: '/admin/content/questions'
-  defaults:
-    _controller: '\Drupal\voting_module\Controller\AdminController::listQuestions'
-    _title: 'Questions'
-  requirements:
-    _permission: 'administer voting module'
