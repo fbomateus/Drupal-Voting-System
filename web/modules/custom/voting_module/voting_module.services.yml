@@ -13,6 +13,12 @@ services:
     class: 'Drupal\voting_module\Service\VotingResultsService'
     arguments: ['@entity_type.manager', '@event_dispatcher']
 
+  voting_module.assessment_list_builder:
+    class: Drupal\voting_module\AssessmentListBuilder
+    arguments: ['@entity_type.manager', '@voting_module.voting_results_service']
+    tags:
+      - { name: entity_list_builder, entity_type: voting_module_assessment }
+
   # Event subscriber for voting events.
   voting_module.voting_event_subscriber:
     class: 'Drupal\voting_module\EventSubscriber\VotingEventSubscriber'
