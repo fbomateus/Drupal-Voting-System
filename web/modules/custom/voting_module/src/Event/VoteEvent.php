@@ -34,6 +34,13 @@ class VoteEvent extends Event {
   protected $answer;
 
   /**
+   * The selected option.
+   *
+   * @var string
+   */
+  protected $selectedOption;
+
+  /**
    * Constructs a VoteEvent object.
    *
    * @param \Drupal\Core\Session\AccountInterface $account
@@ -42,11 +49,14 @@ class VoteEvent extends Event {
    *   The question being voted on.
    * @param \Drupal\voting_module\Entity\AnswerOption $answer
    *   The answer option chosen.
+   * @param string $selected_option
+   *   The selected option.
    */
-  public function __construct(AccountInterface $account, Question $question, AnswerOption $answer) {
+  public function __construct(AccountInterface $account, Question $question, AnswerOption $answer, $selected_option) {
     $this->account = $account;
     $this->question = $question;
     $this->answer = $answer;
+    $this->selectedOption = $selected_option;
   }
 
   /**
@@ -77,5 +87,15 @@ class VoteEvent extends Event {
    */
   public function getAnswer() {
     return $this->answer;
+  }
+
+  /**
+   * Gets the selected option.
+   *
+   * @return string
+   *   The selected option.
+   */
+  public function getSelectedOption() {
+    return $this->selectedOption;
   }
 }
