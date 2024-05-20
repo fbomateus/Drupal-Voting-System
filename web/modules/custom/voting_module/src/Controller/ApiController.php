@@ -136,12 +136,14 @@ class ApiController extends ControllerBase {
     $user = \Drupal::currentUser();
     $question_id = $data['question_id'];
     $answer_id = $data['answer_id'];
+    $selected_option = $data['selected_option'];
 
     $question = $this->entityTypeManager->getStorage('voting_module_question')->load($question_id);
     $answer = $this->entityTypeManager->getStorage('voting_module_answer_option')->load($answer_id);
 
     if ($question && $answer) {
-      $result = $this->votingService->processVote($user, $question, $answer);
+      // Process the vote and save the selected option
+      $result = $this->votingService->processVote($user, $question, $answer, $selected_option);
       if ($result) {
         return new JsonResponse(['message' => 'Vote submitted successfully']);
       }
@@ -170,7 +172,12 @@ class ApiController extends ControllerBase {
         'question' => $question->label(),
         'results' => $results,
         'percentages' => $percentages,
+        'selected_option' => [],
       ];
+
+      foreach ($results as $result) {
+        $data['selected_option'][] = $result->get('selected_option')->target_id;
+      }
 
       return new JsonResponse($data);
     }
