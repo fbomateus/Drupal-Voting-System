@@ -53,13 +53,3 @@ voting_module.result_list:
   parent: system.admin_content
   route_name: entity.voting_module_result.collection
   weight: 6
-
-# Voting Module: View Question Details menu link.
-# voting_module.view_question:
-#   title: 'View Question'
-#   description: 'View details of a specific question.'
-#   parent: voting_module.question_list
-#   route_name: entity.voting_module_question.canonical
-#   route_parameters:
-#     voting_module_question: ~
-#   weight: 7
