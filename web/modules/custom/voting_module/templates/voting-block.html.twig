@@ -13,42 +13,49 @@
 <div class="voting-block">
   {% for question_id, question in questions %}
     <div class="question">
-      <h3>{{ question.label }}</h3>
-      {% if question.has_voted %}
-        {% if question.show_results and question.total_votes is not null %}
-          <p>{{ 'Total Votes:'|t }} {{ question.total_votes }}</p>
+      <div class="question-options">
+        {% if question.show_results and question.has_voted and question.total_votes is not null %}
+          <h3 class="question-title">{{ question.label }} <div>({{ 'Total Votes:'|t }} {{ question.total_votes }})</div></h3>
+        {% else %}
+          <h3 class="question-title">{{ question.label }}</h3>
         {% endif %}
-        <p>{{ 'You have already voted on this question.'|t }}</p>
-      {% endif %}
+        <button class="toggle-answer-options" data-question-id="{{ question_id }}">{{ question.has_voted ? 'You have already voted on this question'|t : 'Show Answer Options'|t }}</button>
+      </div>
       {% if question.can_vote %}
-        <button class="toggle-answer-options" data-question-id="{{ question_id }}">{{ 'Show Answer Options'|t }}</button>
         <div class="answer-options" id="answer-options-{{ question_id }}" style="display: none;">
+          <hr>
           <form class="vote-form" data-question-id="{{ question_id }}">
             <input type="hidden" name="question_id" value="{{ question_id }}">
             {% for option_id, option in question.answer_options %}
               <div class="answer-option">
-                {% if option.image %}
-                  <div class="answer-option-item">
-                    <img src="{{ option.image }}" alt="{{ option.title }}">
-                    <label>
-                      <input type="radio" name="answer_option" value="{{ option_id }}" data-selected-option="image"> {{ 'Image'|t }}
-                    </label>
-                  </div>
-                {% endif %}
                 {% if option.title %}
-                  <div class="answer-option-item">
-                    <h4>{{ option.title }}</h4>
+                  <div class="answer-option-item title">
                     <label>
                       <input type="radio" name="answer_option" value="{{ option_id }}" data-selected-option="title"> {{ 'Title'|t }}
                     </label>
+                    <div class="item">
+                      <p>{{ option.title }}</p>
+                    </div>
                   </div>
                 {% endif %}
                 {% if option.description %}
-                  <div class="answer-option-item">
-                    <p>{{ option.description }}</p>
+                  <div class="answer-option-item description">
                     <label>
                       <input type="radio" name="answer_option" value="{{ option_id }}" data-selected-option="description"> {{ 'Description'|t }}
                     </label>
+                    <div class="item">
+                      {{ option.description|raw }}
+                    </div>
+                  </div>
+                {% endif %}
+                {% if option.image %}
+                  <div class="answer-option-item image">
+                    <label>
+                      <input type="radio" name="answer_option" value="{{ option_id }}" data-selected-option="image"> {{ 'Image'|t }}
+                    </label>
+                    <div class="item">
+                      <img src="{{ option.image }}" alt="{{ option.title }}">
+                    </div>
                   </div>
                 {% endif %}
               </div>
@@ -56,7 +63,7 @@
             {% if question.answer_options is empty %}
               <p>{{ 'No selectable questions available'|t }}</p>
             {% else %}
-              <button type="submit">{{ 'Vote'|t }}</button>
+              <button class="voting-submit" type="submit">{{ 'Vote'|t }}</button>
             {% endif %}
           </form>
         </div>
@@ -64,5 +71,3 @@
     </div>
   {% endfor %}
 </div>
-
-{% set library = ['voting_module/voting_block'] %}
