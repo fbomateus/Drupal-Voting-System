@@ -78,6 +78,41 @@ class VotingResultsService {
   }
 
   /**
+   * Retrieves the user's votes.
+   *
+   * @param int $user_id
+   *   The user ID.
+   *
+   * @return array
+   *   An array of user's votes keyed by question ID.
+   */
+  public function getUserVotes($user_id) {
+    $query = $this->entityTypeManager->getStorage('voting_module_result')->getQuery()
+      ->condition('user_id', $user_id)
+      ->accessCheck(TRUE);
+
+    $results = $query->execute();
+    $votes = [];
+
+    if (!empty($results)) {
+      $result_entities = $this->entityTypeManager->getStorage('voting_module_result')->loadMultiple($results);
+      foreach ($result_entities as $result) {
+        $question_id = $result->get('question_id')->target_id;
+        if (!isset($votes[$question_id])) {
+          $votes[$question_id] = [
+            'answer_id' => $result->get('answer_id')->target_id,
+            'vote_count' => 1,
+          ];
+        } else {
+          $votes[$question_id]['vote_count']++;
+        }
+      }
+    }
+
+    return $votes;
+  }
+
+  /**
    * Calculate the percentage of votes for each answer option.
    *
    * @param \Drupal\voting_module\Entity\Question $question
