@@ -32,7 +32,6 @@
         var questionId = form.data('question-id');
         var answerId = form.find('input[name="answer_option"]:checked').val();
         var selectedOption = form.find('input[name="answer_option"]:checked').parent().text().trim();
-        var apiKey = '55fe3d788334cbc3faa89fc74ef879d133d6da3b1002edd276a3e83901c7d6be'; // Replace with the actual API key
 
         if (!answerId) {
           alert(Drupal.t('Please select an answer option.'));
@@ -40,11 +39,8 @@
         }
 
         $.ajax({
-          url: Drupal.url('api/voting/vote'),
+          url: Drupal.url('api/voting/vote-server-proxy'),
           type: 'POST',
-          headers: {
-            'Authorization': apiKey
-          },
           data: JSON.stringify({
             question_id: questionId,
             answer_id: answerId,
