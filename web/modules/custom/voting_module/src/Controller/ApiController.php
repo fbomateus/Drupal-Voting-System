@@ -77,11 +77,33 @@ class ApiController extends ControllerBase {
     );
   }
 
+  /**
+   * Validates the API key for third-party requests.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request object.
+   *
+   * @return bool
+   *   TRUE if the API key is valid, FALSE otherwise.
+   */
   protected function validateApiKey(Request $request) {
     $api_key = $request->headers->get('Authorization');
     if (strpos($api_key, 'Bearer ') === 0) {
       $api_key = substr($api_key, 7);
     }
+    $keys = $this->entityTypeManager->getStorage('voting_module_api_key')->loadByProperties(['key' => $api_key]);
+    return !empty($keys);
+  }
+
+  /**
+   * Validates the API key for server-side requests.
+   *
+   * @return bool
+   *   TRUE if the API key is valid, FALSE otherwise.
+   */
+  protected function validateServerApiKey() {
+    $config = $this->config('voting_module.settings');
+    $api_key = $config->get('api_key');
     $keys = $this->entityTypeManager->getStorage('voting_module_api_key')->loadByProperties(['key' => $api_key]);
     return !empty($keys);
   }
@@ -152,7 +174,7 @@ class ApiController extends ControllerBase {
   }
 
   /**
-   * Endpoint to submit a vote.
+   * Submits a vote from the server-side.
    *
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request object containing vote data.
@@ -160,11 +182,41 @@ class ApiController extends ControllerBase {
    * @return \Symfony\Component\HttpFoundation\JsonResponse
    *   The JSON response indicating the result of the vote submission.
    */
-  public function submitVote(Request $request) {
+  public function submitServerSideVote(Request $request) {
+    if (!$this->validateServerApiKey()) {
+      return new JsonResponse(['message' => 'Unauthorized'], 401);
+    }
+
+    return $this->processVoteSubmission($request);
+  }
+
+  /**
+   * Submits a vote from third-party applications.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request object containing vote data.
+   *
+   * @return \Symfony\Component\HttpFoundation\JsonResponse
+   *   The JSON response indicating the result of the vote submission.
+   */
+  public function submitThirdPartyVote(Request $request) {
     if (!$this->validateApiKey($request)) {
       return new JsonResponse(['message' => 'Unauthorized'], 401);
     }
 
+    return $this->processVoteSubmission($request);
+  }
+
+  /**
+   * Processes the vote submission.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request object containing vote data.
+   *
+   * @return \Symfony\Component\HttpFoundation\JsonResponse
+   *   The JSON response indicating the result of the vote submission.
+   */
+  private function processVoteSubmission(Request $request) {
     $data = json_decode($request->getContent(), TRUE);
     $user = \Drupal::currentUser();
     $question_id = $data['question_id'];
