@@ -65,20 +65,36 @@ class AnswerOptionListBuilder extends EntityListBuilder {
    *   An associative array of operations.
    */
   public function buildOperations(EntityInterface $entity) {
-    $operations = parent::buildOperations($entity);
+    $operations = [];
     if ($entity->access('update')) {
       $operations['edit'] = [
         'title' => $this->t('Edit'),
-        'url' => Url::fromRoute('entity.voting_module_answer_option.edit_form', ['voting_module_answer_option' => $entity->id()])->toString(),
+        'url' => Url::fromRoute('entity.voting_module_answer_option.edit_form', ['voting_module_answer_option' => $entity->id()]),
       ];
     }
     if ($entity->access('delete')) {
       $operations['delete'] = [
         'title' => $this->t('Delete'),
-        'url' => Url::fromRoute('entity.voting_module_answer_option.delete_form', ['voting_module_answer_option' => $entity->id()])->toString(),
+        'url' => Url::fromRoute('entity.voting_module_answer_option.delete_form', ['voting_module_answer_option' => $entity->id()]),
       ];
     }
-    return $operations;
+
+    // Convert the operations into renderable links.
+    $links = [];
+    foreach ($operations as $key => $operation) {
+      $links[$key] = [
+        'title' => $operation['title'],
+        'url' => $operation['url'],
+        'attributes' => [],
+      ];
+    }
+
+    return [
+      'data' => [
+        '#type' => 'operations',
+        '#links' => $links,
+      ],
+    ];
   }
 
 }
