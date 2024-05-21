@@ -145,13 +145,15 @@ class VotingBlock extends BlockBase implements ContainerFactoryPluginInterface {
       }
 
       $answer_options = $enable_voting ? $this->getAnswerOptions($question) : [];
-      $has_voted = !$this->currentUser->hasPermission('administer site') && isset($votes[$question->id()]);
+      $has_voted = isset($votes[$question->id()]);
+      $is_admin = $this->currentUser->hasPermission('administer site');
       $total_votes = $show_results ? $this->votingResultsService->getTotalVotes($question) : NULL;
 
       $options[$question->id()] = [
         'label' => $question->label(),
         'answer_options' => $answer_options,
         'has_voted' => $has_voted,
+        'is_admin' => $is_admin,
         'total_votes' => $total_votes,
         'can_vote' => $enable_voting && $is_logged_in && !$has_voted,
         'show_results' => $show_results,

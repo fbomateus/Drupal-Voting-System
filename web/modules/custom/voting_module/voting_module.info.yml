@@ -42,8 +42,6 @@ links:
 templates:
   - voting-block.html.twig
   - result-block.html.twig
-  - admin-question-view.html.twig
-  - item-list.html.twig
 
 # Version of the module.
 version: '1.0.0'
@@ -64,8 +62,6 @@ src:
 theme:
   - voting_block
   - result_block
-  - admin_question_view
-  - item_list
 
 # Specifies the tests to be run.
 tests:

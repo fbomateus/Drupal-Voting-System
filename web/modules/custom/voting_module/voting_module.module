@@ -30,12 +30,6 @@ function voting_module_theme() {
         'average_ratings' => [],
       ],
     ],
-    'admin_question_view' => [
-      'variables' => [
-        'question' => NULL,
-        'answers' => [],
-      ],
-    ],
   ];
 }
 
@@ -155,17 +149,6 @@ function template_preprocess_voting_block(&$variables) {
  */
 function template_preprocess_result_block(&$variables) {
   // Preprocess logic for the result block template.
-}
-
-/**
- * Implements hook_preprocess_HOOK() for admin_question_view theme hook.
- */
-function template_preprocess_admin_question_view(&$variables) {
-  // Preprocess logic for the admin question view template.
-  $question = $variables['question'];
-  $answer_options = \Drupal::entityTypeManager()->getStorage('voting_module_answer_option')
-    ->loadByProperties(['question' => $question->id()]);
-  $variables['answers'] = $answer_options;
 }
 
 /**

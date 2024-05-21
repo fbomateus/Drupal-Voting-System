@@ -19,9 +19,9 @@
         {% else %}
           <h3 class="question-title">{{ question.label }}</h3>
         {% endif %}
-        <button class="toggle-answer-options" data-question-id="{{ question_id }}">{{ question.has_voted ? 'You have already voted on this question'|t : 'Show Answer Options'|t }}</button>
+        <button class="toggle-answer-options" data-question-id="{{ question_id }}">{{ (question.has_voted and not question.is_admin) ? 'You have already voted on this question'|t : 'Show Answer Options'|t }}</button>
       </div>
-      {% if question.can_vote %}
+      {% if question.can_vote or question.is_admin  %}
         <div class="answer-options" id="answer-options-{{ question_id }}" style="display: none;">
           <hr>
           <form class="vote-form" data-question-id="{{ question_id }}">
