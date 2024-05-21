@@ -105,7 +105,6 @@ Acesse **Configuration -> System -> Voting Module Settings** para configurar as 
 
 ### Gerenciamento de Chaves de API
 Acesse **Configuration -> Web services -> API Keys** para gerenciar chaves de API que serão usadas por aplicativos de terceiros para interagir com o sistema de votação.
-**(Importante adicionar chave da API no arquivo** `js/voting_block.js na linha 35` **para ser possível enviar votos no sistema.)**
 
 ### Gerenciar funcionalidades
  - **Manage Questions**: `/admin/content/question`
@@ -116,7 +115,7 @@ Acesse **Configuration -> Web services -> API Keys** para gerenciar chaves de AP
  - **Adicionar bloco** `Result Block` **para exibir o resultado da votação para questões específicas.**
  
 #### OBS:
- - **Importante adicionar chave da API no arquivo** `js/voting_block.js na linha 35` **para ser possível enviar votos no sistema.**
+ - **Importante adicionar chave da API em Configuration -> System -> Voting Module Settings**
  - O usuário adiministrador está habilitado para votar quantas vezes quiser.
  - Outros usuários tem o comportamento de votação padrão.
 
