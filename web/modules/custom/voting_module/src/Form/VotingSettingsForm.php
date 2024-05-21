@@ -35,7 +35,7 @@ class VotingSettingsForm extends ConfigFormBase {
       '#type' => 'checkbox',
       '#title' => $this->t('Enable Voting'),
       '#description' => $this->t('Enable or disable the voting functionality.'),
-      '#default_value' => $config->get('enable_voting'),
+      '#default_value' => $config->get('enable_voting') ?? TRUE,
     ];
 
     // Show or hide voting results to users.
