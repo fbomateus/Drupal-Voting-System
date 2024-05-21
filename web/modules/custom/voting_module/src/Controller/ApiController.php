@@ -9,7 +9,7 @@ use Drupal\voting_module\Service\VotingService;
 use Drupal\voting_module\Service\VotingResultsService;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Drupal\Core\File\FileUrlGeneratorInterface;
 
 /**
  * Class ApiController
@@ -40,6 +40,13 @@ class ApiController extends ControllerBase {
   protected $entityTypeManager;
 
   /**
+   * The file URL generator service.
+   *
+   * @var \Drupal\Core\File\FileUrlGeneratorInterface
+   */
+  protected $fileUrlGenerator;
+
+  /**
    * Constructs a new ApiController object.
    *
    * @param \Drupal\voting_module\Service\VotingService $voting_service
@@ -48,11 +55,14 @@ class ApiController extends ControllerBase {
    *   The voting results service.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
+   * @param \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator
+   *   The file URL generator service.
    */
-  public function __construct(VotingService $voting_service, VotingResultsService $voting_results_service, EntityTypeManagerInterface $entity_type_manager) {
+  public function __construct(VotingService $voting_service, VotingResultsService $voting_results_service, EntityTypeManagerInterface $entity_type_manager, FileUrlGeneratorInterface $file_url_generator) {
     $this->votingService = $voting_service;
     $this->votingResultsService = $voting_results_service;
     $this->entityTypeManager = $entity_type_manager;
+    $this->fileUrlGenerator = $file_url_generator;
   }
 
   /**
@@ -62,8 +72,18 @@ class ApiController extends ControllerBase {
     return new static(
       $container->get('voting_module.voting_service'),
       $container->get('voting_module.voting_results_service'),
-      $container->get('entity_type.manager')
+      $container->get('entity_type.manager'),
+      $container->get('file_url_generator')
     );
+  }
+
+  protected function validateApiKey(Request $request) {
+    $api_key = $request->headers->get('Authorization');
+    if (strpos($api_key, 'Bearer ') === 0) {
+      $api_key = substr($api_key, 7);
+    }
+    $keys = $this->entityTypeManager->getStorage('voting_module_api_key')->loadByProperties(['key' => $api_key]);
+    return !empty($keys);
   }
 
   /**
@@ -72,7 +92,11 @@ class ApiController extends ControllerBase {
    * @return \Symfony\Component\HttpFoundation\JsonResponse
    *   The JSON response containing all questions.
    */
-  public function getAllQuestions() {
+  public function getAllQuestions(Request $request) {
+    if (!$this->validateApiKey($request)) {
+      return new JsonResponse(['message' => 'Unauthorized'], 401);
+    }
+
     $questions = $this->entityTypeManager->getStorage('voting_module_question')->loadMultiple();
     $data = [];
 
@@ -96,7 +120,11 @@ class ApiController extends ControllerBase {
    * @return \Symfony\Component\HttpFoundation\JsonResponse
    *   The JSON response containing the question details.
    */
-  public function getQuestion($question_id) {
+  public function getQuestion(Request $request, $question_id) {
+    if (!$this->validateApiKey($request)) {
+      return new JsonResponse(['message' => 'Unauthorized'], 401);
+    }
+
     $question = $this->entityTypeManager->getStorage('voting_module_question')->load($question_id);
 
     if ($question) {
@@ -113,7 +141,7 @@ class ApiController extends ControllerBase {
           'id' => $answer->id(),
           'label' => $answer->label(),
           'description' => $answer->get('description')->value,
-          'image' => $answer->get('image')->target_id,
+          'image' => $this->getImageUrl($answer->get('image')->entity),
         ];
       }
 
@@ -133,16 +161,15 @@ class ApiController extends ControllerBase {
    *   The JSON response indicating the result of the vote submission.
    */
   public function submitVote(Request $request) {
+    if (!$this->validateApiKey($request)) {
+      return new JsonResponse(['message' => 'Unauthorized'], 401);
+    }
+
     $data = json_decode($request->getContent(), TRUE);
     $user = \Drupal::currentUser();
     $question_id = $data['question_id'];
     $answer_id = $data['answer_id'];
     $selected_option = $data['selected_option'];
-
-    // Ensure the user is logged in before processing the vote.
-    if ($user->isAnonymous()) {
-      throw new AccessDeniedHttpException('You must be logged in to vote.');
-    }
 
     $question = $this->entityTypeManager->getStorage('voting_module_question')->load($question_id);
     $answer = $this->entityTypeManager->getStorage('voting_module_answer_option')->load($answer_id);
@@ -167,7 +194,11 @@ class ApiController extends ControllerBase {
    * @return \Symfony\Component\HttpFoundation\JsonResponse
    *   The JSON response containing the voting results.
    */
-  public function getResults($question_id) {
+  public function getResults(Request $request, $question_id) {
+    if (!$this->validateApiKey($request)) {
+      return new JsonResponse(['message' => 'Unauthorized'], 401);
+    }
+
     $question = $this->entityTypeManager->getStorage('voting_module_question')->load($question_id);
 
     if ($question) {
@@ -189,6 +220,22 @@ class ApiController extends ControllerBase {
     }
 
     return new JsonResponse(['message' => 'Question not found'], 404);
+  }
+
+  /**
+   * Gets the URL of an image file entity.
+   *
+   * @param \Drupal\file\FileInterface|null $file
+   *   The file entity.
+   *
+   * @return string
+   *   The URL of the image.
+   */
+  protected function getImageUrl($file) {
+    if ($file) {
+      return $this->fileUrlGenerator->generateAbsoluteString($file->getFileUri());
+    }
+    return '';
   }
 
 }
