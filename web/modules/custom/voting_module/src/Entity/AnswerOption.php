@@ -67,45 +67,27 @@ class AnswerOption extends ContentEntityBase {
         'weight' => -4,
       ]);
 
-    $fields['image'] = BaseFieldDefinition::create('image')
+      $fields['image'] = BaseFieldDefinition::create('image')
       ->setLabel(t('Image'))
       ->setDescription(t('The image associated with the answer option.'))
       ->setSettings([
-        'target_type' => 'file',
         'file_extensions' => 'png jpg jpeg',
-        'file_directory' => 'voting_module_answer_option/images',
-        'handler' => 'default:file',
         'alt_field' => FALSE,
         'alt_field_required' => FALSE,
         'title_field' => FALSE,
         'title_field_required' => FALSE,
-        'default_image' =>
-          [
-            'uuid' => '',
-            'alt' => '',
-            'title' => '',
-            'width' => NULL,
-            'height' => NULL,
-          ],
       ])
       ->setDisplayOptions('view', [
         'label' => 'above',
         'type' => 'image',
         'weight' => -3,
-        'settings' => [
-          'image_link' => '',
-          'image_style' => '',
-          'image_loading' => [
-            'attribute' => 'lazy',
-          ],
-        ],
       ])
       ->setDisplayOptions('form', [
         'type' => 'image_image',
         'weight' => -3,
         'settings' => [
           'progress_indicator' => 'throbber',
-          'preview_image_style' => '',
+          'preview_image_style' => 'thumbnail',
         ],
       ])
       ->setDisplayConfigurable('form', TRUE)
