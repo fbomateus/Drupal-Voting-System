@@ -8,53 +8,47 @@ voting_module.settings:
     _permission: 'administer voting module'
 
 # API route to get all questions.
-voting_module.api.questions:
-  path: '/api/voting_module/questions'
-  defaults:
-    _controller: '\Drupal\voting_module\Controller\ApiController::getAllQuestions'
-    _title: 'Get All Questions'
-  requirements:
-    _permission: 'access content'
-  methods: [GET]
-
 voting_module.api.get_all_questions:
-  path: '/api/voting_module/questions'
+  path: '/api/voting/questions'
   defaults:
     _controller: '\Drupal\voting_module\Controller\ApiController::getAllQuestions'
-    _title: 'Get All Questions'
   requirements:
     _permission: 'access content'
-  methods: [GET]
 
 # API route to get details of a specific question by ID.
 voting_module.api.get_question:
-  path: '/api/voting_module/questions/{question_id}'
+  path: '/api/voting/questions/{question_id}'
   defaults:
     _controller: '\Drupal\voting_module\Controller\ApiController::getQuestion'
-    _title: 'Get Question'
   requirements:
     _permission: 'access content'
-  methods: [GET]
+    question_id: \d+
 
 # API route to submit a vote.
 voting_module.api.submit_vote:
-  path: '/api/voting_module/vote'
+  path: '/api/voting/vote'
   defaults:
     _controller: '\Drupal\voting_module\Controller\ApiController::submitVote'
-    _title: 'Submit Vote'
   requirements:
     _permission: 'access content'
   methods: [POST]
 
 # API route to get voting results for a specific question by ID.
 voting_module.api.get_results:
-  path: '/api/voting_module/questions/{question_id}/results'
+  path: '/api/voting/results/{question_id}'
   defaults:
     _controller: '\Drupal\voting_module\Controller\ApiController::getResults'
-    _title: 'Get Results'
   requirements:
     _permission: 'access content'
-  methods: [GET]
+    question_id: \d+
+
+voting_module.api_key_form:
+  path: '/admin/config/voting_module/api_keys'
+  defaults:
+    _form: '\Drupal\voting_module\Form\ApiKeyForm'
+    _title: 'API Keys'
+  requirements:
+    _permission: 'administer voting module'
 
 # Route for the collection of Question entities.
 entity.voting_module_question.collection:
