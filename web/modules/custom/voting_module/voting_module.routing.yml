@@ -28,10 +28,18 @@ voting_module.api.get_question:
 voting_module.api.submit_vote:
   path: '/api/voting/vote'
   defaults:
-    _controller: '\Drupal\voting_module\Controller\ApiController::submitVote'
+    _controller: '\Drupal\voting_module\Controller\ApiController::submitThirdPartyVote'
   requirements:
     _permission: 'access content'
   methods: [POST]
+
+voting_module.vote_server_proxy:
+  path: '/api/voting/vote-server-proxy'
+  defaults:
+    _controller: '\Drupal\voting_module\Controller\ApiController::submitServerSideVote'
+  requirements:
+    _permission: 'access content'
+  methods: ['POST']
 
 # API route to get voting results for a specific question by ID.
 voting_module.api.get_results:
