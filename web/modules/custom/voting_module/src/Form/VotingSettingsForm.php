@@ -46,6 +46,15 @@ class VotingSettingsForm extends ConfigFormBase {
       '#default_value' => $config->get('show_results'),
     ];
 
+    // Field for API Key
+    $form['api_key'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('API Key'),
+      '#description' => $this->t('Enter the API key used for authenticating API requests.'),
+      '#default_value' => $config->get('api_key'),
+      '#required' => TRUE,
+    ];
+
     return parent::buildForm($form, $form_state);
   }
 
@@ -63,6 +72,7 @@ class VotingSettingsForm extends ConfigFormBase {
     $this->config('voting_module.settings')
       ->set('enable_voting', $form_state->getValue('enable_voting'))
       ->set('show_results', $form_state->getValue('show_results'))
+      ->set('api_key', $form_state->getValue('api_key'))  // Save the API key
       ->save();
 
     parent::submitForm($form, $form_state);
