@@ -95,34 +95,29 @@ class QuestionReferenceSelection extends DefaultSelection {
    */
   protected function buildEntityQuery($match = NULL, $match_operator = 'CONTAINS') {
     $query = parent::buildEntityQuery($match, $match_operator);
-
-    // Exclude questions already used in other AnswerOption entities.
-    if (!empty($this->configuration['entity'])) {
-      $current_entity_id = $this->configuration['entity']->id();
-    } else {
-      $current_entity_id = NULL;
-    }
-
+  
+    // Get the current entity and question IDs.
+    $current_entity = $this->configuration['entity'] ?? NULL;
+    $current_entity_id = $current_entity ? $current_entity->id() : NULL;
+    $current_question_id = $current_entity ? $current_entity->get('question')->target_id : NULL;
+  
     // Subquery to find question IDs already used in other answer options.
     $subquery = $this->database->select('voting_module_answer_option__question', 'aoq')
       ->fields('aoq', ['question_target_id'])
       ->distinct()
       ->execute()
       ->fetchCol();
-
-    // Add condition to exclude already used questions.
+  
+    // Add condition to exclude already used questions, but allow the current question ID.
     if (!empty($subquery)) {
-      $query->condition('id', $subquery, 'NOT IN');
-    }
-
-    // Exclude the current question ID if it's already in the same answer option.
-    if ($current_entity_id) {
-      $current_question_id = $this->configuration['entity']->get('question')->target_id;
       if ($current_question_id) {
-        $query->condition('id', $current_question_id, '<>');
+        $subquery = array_diff($subquery, [$current_question_id]);
+      }
+      if (!empty($subquery)) {
+        $query->condition('id', $subquery, 'NOT IN');
       }
     }
-
+  
     return $query;
   }
 
